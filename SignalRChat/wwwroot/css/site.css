@@ -8,7 +8,7 @@
 
 .navbar {
 	background-color: #342742;
-	height: 50px;
+	min-height: 50px;
 	z-index: 100;
 	box-shadow: 0 1px 2px 0 #333;
 }
@@ -54,19 +54,21 @@
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+	max-height: 100%;
 }
 
 .chat-body {
 	background-color: #eee;
 	flex-grow: 1;
 	display: flex;
-	flex-direction: column;
 	justify-content: flex-end;
+	padding-bottom: 1rem;
+	overflow: auto;
 }
 
 .chat-input {
 	background-color: #443554;
-	height: 70px;
+	min-height: 70px;
 	z-index: 25;
 	box-shadow: 0 -1px 2px 0 #333;
 }
@@ -76,6 +78,9 @@
 	flex-direction: row;
 	margin-top: 0.2rem;
 }
+	.message:first-child {
+		margin-top: auto;
+	}
 
 	.message > * {
 		padding: 0.2rem;
