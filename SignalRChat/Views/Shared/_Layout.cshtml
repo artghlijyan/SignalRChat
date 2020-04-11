@@ -16,14 +16,7 @@
 	</div>
 
 	<div class="main">
-		<div class="side-menu">
-			<a class="room-button" href="#">
-				Room
-			</a>
-			<a class="room-button" id="create-room-btn" href="#">
-				<strong>+</strong>	
-			</a>
-		</div>
+		<vc:room></vc:room>
 		<div class="chat">
 			@RenderBody()
 		</div>
@@ -34,7 +27,7 @@
 			<button type="button" class="close" onclick="closeModal()">X</button>
 			<header>Create Room</header>
 			<div>
-				<input>
+				<input name="name">
 			</div>
 			<footer>
 				<button>Create</button>
