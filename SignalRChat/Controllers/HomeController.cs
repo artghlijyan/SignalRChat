@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SignalRChat.DbRepo;
 using SignalRChat.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,11 +10,38 @@ namespace SignalRChat.Controllers
 {
     public class HomeController : Controller
     {
-        private AppDbContext _dbContext;
+        private SigninManager _dbContext;
 
-        public HomeController(AppDbContext dbContext) => _dbContext = dbContext;
+        public HomeController(SigninManager dbContext) => _dbContext = dbContext;
 
         public IActionResult Index() => View();
+
+        [HttpGet("{id}")]
+        public IActionResult Chat(int id)
+        {
+            var chat = _dbContext.
+                Chats.
+                Include(x => x.Messages).
+                FirstOrDefault(x => x.Id == id);
+            return View(chat);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMessage(int chatId, string message)
+        {
+            var chatMessage = new Message()
+            {
+                ChatId = chatId,
+                Text = message,
+                Name = "Default",
+                TimeStamp = DateTime.Now
+            };
+
+            _dbContext.Messages.Add(chatMessage);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Chat", new { id = chatId });
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateRoom(string name)
@@ -28,6 +55,6 @@ namespace SignalRChat.Controllers
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Index");
-        } 
+        }
     }
 }

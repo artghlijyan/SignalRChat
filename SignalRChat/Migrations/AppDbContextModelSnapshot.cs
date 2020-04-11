@@ -8,7 +8,7 @@ using SignalRChat.DbRepo;
 
 namespace SignalRChat.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(SigninManager))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

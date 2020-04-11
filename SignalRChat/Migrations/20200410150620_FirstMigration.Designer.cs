@@ -9,7 +9,7 @@ using SignalRChat.DbRepo;
 
 namespace SignalRChat.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(SigninManager))]
     [Migration("20200410150620_FirstMigration")]
     partial class FirstMigration
     {

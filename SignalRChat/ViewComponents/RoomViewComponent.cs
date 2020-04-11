@@ -1,17 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SignalRChat.DbRepo;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SignalRChat.ViewComponents
 {
     public class RoomViewComponent : ViewComponent
     {
-        private AppDbContext _dbContext;
+        private SigninManager _dbContext;
 
-        public RoomViewComponent(AppDbContext dbContext)
+        public RoomViewComponent(SigninManager dbContext)
         {
             _dbContext = dbContext;
         }

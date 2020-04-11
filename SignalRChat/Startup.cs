@@ -22,11 +22,18 @@ namespace SignalRChat
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<SigninManager>(options =>
             options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>().
-                AddEntityFrameworkStores<AppDbContext>().
+            services.AddIdentity<User, IdentityRole>(op => 
+            {
+                op.Password.RequireDigit = false;
+                op.Password.RequireLowercase = false;
+                op.Password.RequireNonAlphanumeric = false;
+                op.Password.RequireUppercase = false;
+                op.Password.RequiredLength = 6;
+            }).
+                AddEntityFrameworkStores<SigninManager>().
                 AddDefaultTokenProviders(); 
         }
 
@@ -34,6 +41,7 @@ namespace SignalRChat
         {
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
     }

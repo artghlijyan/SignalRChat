@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SignalRChat.Models
 {
     public class Chat
     {
+        public Chat()
+        {
+            Messages = new List<Message>();
+            Users = new List<User>();
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
