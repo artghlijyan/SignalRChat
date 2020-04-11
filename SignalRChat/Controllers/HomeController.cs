@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SignalRChat.DbRepo;
 using SignalRChat.Models;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SignalRChat.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private SigninManager _dbContext;
@@ -33,7 +35,7 @@ namespace SignalRChat.Controllers
             {
                 ChatId = chatId,
                 Text = message,
-                Name = "Default",
+                Name = User.Identity.Name,
                 TimeStamp = DateTime.Now
             };
 
