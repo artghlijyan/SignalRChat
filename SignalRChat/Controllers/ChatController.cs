@@ -22,14 +22,14 @@ namespace SignalRChat.Controllers
             _chat = chat;
         }
 
-        [HttpPost("[action]/{connId},{roomName}")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> JoinRoom(string connId, string roomName)
         {
             await _chat.Groups.AddToGroupAsync(connId, roomName);
             return Ok();
         }
 
-        [HttpPost("[action]/{connId},{roomName}")]
+        [HttpPost("[action]/{connId}/{roomName}")]
         public async Task<IActionResult> LeaveRoom(string connId, string roomName)
         {
             await _chat.Groups.RemoveFromGroupAsync(connId, roomName);

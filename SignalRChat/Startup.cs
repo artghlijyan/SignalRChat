@@ -46,10 +46,12 @@ namespace SignalRChat
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseAuthentication();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chatHub");
             });
+
             app.UseMvcWithDefaultRoute();
         }
     }
