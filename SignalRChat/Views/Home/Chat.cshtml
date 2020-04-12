@@ -20,7 +20,7 @@
 
 @section scripts
 {
-	<script src="~/js/signalr.min.js"></script>
+	<script type="text/javascript" src="~/js/signalr/dist/browser/signalr.min.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script>
 		var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build()
@@ -54,14 +54,14 @@
 				.then(res => {
 					console.log("Room Joined", res)
 				})
-				.chatch(err => {
-					console.log("Failed to Joined", err)
+				.catch(err => {
+					console.err("Failed to Join", err)
 				})
 		}
 
 		connection.start()
 			.then(function () {
-				connection.Invoke('getConnectionId')
+				connection.invoke('getConnectionId')
 					.then(function (connectionId) {
 						_connectionId = connectionId
 						joinRoom()
@@ -72,16 +72,18 @@
 			})
 
 		var sendMessage = function (event) {
+
 			event.preventDefault()
 
-			var data = new ForrmData(event.target)
+			var data = new FormData(event.target)
 			document.getElementById('message-input').value = ''
-			axios.post('/chat/SendMessage', data)
+
+			axios.post('/Chat/SendMessage/', data)
 				.then(res => {
-					console.log("Message Sent!")
+					console.log("Message Sent!", res)
 				})
-				.chatch(err => {
-					console.log("failed to send")
+				.catch(err => {
+					console.log("Failed to send", err)
 				})
 		}
 	</script>

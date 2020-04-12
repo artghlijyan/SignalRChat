@@ -29,13 +29,14 @@ namespace SignalRChat.Controllers
             return Ok();
         }
 
-        [HttpPost("[action]/{connId}/{roomName}")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> LeaveRoom(string connId, string roomName)
         {
             await _chat.Groups.RemoveFromGroupAsync(connId, roomName);
             return Ok();
         }
 
+        [HttpPost("[action]")]
         public async Task<IActionResult> SendMessage(
             int chatId,
             string message, 

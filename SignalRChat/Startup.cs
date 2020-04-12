@@ -39,20 +39,19 @@ namespace SignalRChat
 
             services.AddSignalR();
         }
-
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseAuthentication();
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("/chatHub");
-            });
-
+            app.UseRouting();
             app.UseMvcWithDefaultRoute();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chatHub");
+            });
         }
     }
 }
