@@ -4,13 +4,23 @@ using SignalRChat.Models;
 
 namespace SignalRChat.DbRepo
 {
-    public class SigninManager : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<User>
     {
-        public SigninManager(DbContextOptions<SigninManager> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         
         public DbSet<Chat> Chats { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<ChatUser> ChatUsers{ get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ChatUser>().
+                HasKey(x => new { x.ChatId, x.UserId });
+        }
 
     }
 }

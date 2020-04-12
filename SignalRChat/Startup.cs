@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SignalRChat.DbRepo;
 using SignalRChat.Models;
+using SignalRChat.Hubs;
 
 namespace SignalRChat
 {
@@ -22,7 +23,7 @@ namespace SignalRChat
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            services.AddDbContext<SigninManager>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>(op => 
@@ -33,15 +34,22 @@ namespace SignalRChat
                 op.Password.RequireUppercase = false;
                 op.Password.RequiredLength = 6;
             }).
-                AddEntityFrameworkStores<SigninManager>().
-                AddDefaultTokenProviders(); 
+                AddEntityFrameworkStores<AppDbContext>().
+                AddDefaultTokenProviders();
+
+            services.AddSignalR();
         }
 
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
             app.UseMvcWithDefaultRoute();
         }
     }

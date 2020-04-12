@@ -5,6 +5,7 @@ using SignalRChat.DbRepo;
 using SignalRChat.Models;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SignalRChat.Controllers
@@ -12,11 +13,19 @@ namespace SignalRChat.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private SigninManager _dbContext;
+        private AppDbContext _dbContext;
 
-        public HomeController(SigninManager dbContext) => _dbContext = dbContext;
+        public HomeController(AppDbContext dbContext) => _dbContext = dbContext;
 
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            var chats = _dbContext.Chats.
+                Include(x => x.Users).
+                Where(y => !y.Users.
+                Any(z => z.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
+
+            return View(chats);
+        }
 
         [HttpGet("{id}")]
         public IActionResult Chat(int id)
@@ -48,15 +57,38 @@ namespace SignalRChat.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRoom(string name)
         {
-            _dbContext.Add(new Chat
+            var chat = new Chat
             {
                 Name = name,
                 Type = ChatType.Room
+            };
+
+            chat.Users.Add(new ChatUser()
+            {
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Role = UserRole.Admin
             });
 
+            _dbContext.Chats.Add(chat);
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> JoinRoom(int id)
+        {
+            var chatUser = new ChatUser()
+            {
+                ChatId = id,
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Role = UserRole.Member
+            };
+
+            _dbContext.ChatUsers.Add(chatUser);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Chat", "Home", new { id = id });
         }
     }
 }
